@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -35,9 +36,13 @@ public class PrefList
     public PrefList()
     {
         Data = new ObservableCollection<string>();
-        Data.Add("北海道");
-        Data.Add("青森県");
-        Data.Add("岩手県");
-        Data.Add("秋田県");
+        
+        foreach (Process p in Process.GetProcesses())
+        {
+            if (p.MainWindowTitle.Length != 0)
+            {
+                Data.Add($"{p.ProcessName} - {p.MainWindowTitle}");
+            }
+        }
     }
 }
