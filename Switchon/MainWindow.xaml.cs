@@ -71,8 +71,28 @@ namespace Switchon
         {
             if (!WindowList.Items.IsEmpty)
             {
-                WindowList.SelectedItem = WindowList.Items[0];
+                WindowList.SelectedIndex = 0;
             }
+        }
+
+        private void SelectNextItem()
+        {
+            if (WindowList.SelectedIndex >= WindowList.Items.Count)
+            {
+                return;
+            }
+
+            WindowList.SelectedIndex += 1;
+        }
+
+        private void SelectPreviousItem()
+        {
+            if (WindowList.SelectedIndex <= 0)
+            {
+                return;
+            }
+
+            WindowList.SelectedIndex -= 1;
         }
 
         [DllImport("user32.dll")]
@@ -106,13 +126,21 @@ namespace Switchon
 
         private void SearchBox_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter)
+            switch (e.Key)
             {
-                if (WindowList.Items.Count == 1)
-                {
-                    ActivateSelectedWindow();
-                }
-                SearchBox.MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
+                case Key.Enter:
+                    if (WindowList.Items.Count == 1)
+                    {
+                        ActivateSelectedWindow();
+                    }
+                    SearchBox.MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
+                    break;
+                case Key.Up:
+                    SelectPreviousItem();
+                    break;
+                case Key.Down:
+                    SelectNextItem();
+                    break;
             }
         }
 
